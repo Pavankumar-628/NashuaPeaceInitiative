@@ -6,7 +6,9 @@
 /e2e/test-output/
 /.angular/
 .angular/
-
+.vs/
+*.suo
+*.user
 # Node modules and dependency files
 /node_modules/
 /package-lock.json
