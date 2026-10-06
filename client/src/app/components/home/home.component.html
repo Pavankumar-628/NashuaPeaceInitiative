@@ -1,0 +1,216 @@
+<!-- Hero Banner -->
+<section class="hero-wrapper">
+  <div class="shell-container hero-grid">
+    <div class="hero-text-block">
+      <div class="status-pill">
+        <span class="live-dot"></span> Active Simulation • Rivier University COMP-699-B
+      </div>
+      <h1 class="hero-title">
+        Nashua Peace Initiative for the <span class="text-gradient">Black Sea Region</span>
+      </h1>
+      <p class="hero-description">
+        Modeling track-two diplomacy, academic exchange, and conflict mitigation. Connecting civic participants in Nashua, New Hampshire with educational institutions in Romania, including the Black Sea University Foundation (FUMN).
+      </p>
+
+      <div class="cta-row">
+        <a routerLink="/get-involved" class="btn-primary-action">
+          Take Part in the Simulation
+          <span class="icon">→</span>
+        </a>
+        <a routerLink="/region" class="btn-secondary-action">
+          Explore Littoral States
+        </a>
+      </div>
+
+      <!-- Quick Metrics Strip -->
+      <div class="quick-kpis">
+        <div class="kpi-box">
+          <div class="kpi-num">6</div>
+          <div class="kpi-desc">Littoral States Monitored</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-num">${{ totalSimulatedBudget | number }}</div>
+          <div class="kpi-desc">Simulated Pilot Capital</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-num">{{ engagementScore }}/100</div>
+          <div class="kpi-desc">Civic Impact Index</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Regional Radar Card -->
+    <div class="radar-card">
+      <div class="radar-top">
+        <div class="radar-title-group">
+          <span class="badge-tech">Regional Conflict Radar</span>
+          <h3>Strategic Littoral Flashpoints</h3>
+        </div>
+        <span class="coord-tag">{{ selectedZone.coordinates }}</span>
+      </div>
+
+      <!-- Interactive Switcher Tabs -->
+      <div class="zone-selector-chips">
+        <button *ngFor="let zone of flashpoints"
+                class="zone-chip"
+                [class.active]="selectedZone.id === zone.id"
+                (click)="selectZone(zone)">
+          {{ zone.name.split(' ')[0] }}
+        </button>
+      </div>
+
+      <!-- Live Card Content -->
+      <div class="zone-display-panel">
+        <div class="zone-status-header">
+          <span class="nation-label">{{ selectedZone.littoralNation }}</span>
+          <span class="status-badge" [style.backgroundColor]="selectedZone.statusColor + '20'" [style.color]="selectedZone.statusColor">
+            ● {{ selectedZone.securityStatus }}
+          </span>
+        </div>
+        <h4>{{ selectedZone.name }}</h4>
+
+        <div class="challenge-box">
+          <strong>Geopolitical Friction:</strong>
+          <p>{{ selectedZone.keyChallenge }}</p>
+        </div>
+
+        <div class="action-box">
+          <strong>Proposed Civic Intervention:</strong>
+          <p>{{ selectedZone.initiativeAction }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive Feature 1: Dynamic Pilot Project Budget Simulator -->
+<section class="interactive-section bg-alt">
+  <div class="shell-container">
+    <div class="section-heading-center">
+      <span class="section-tag">Interactive Simulation Tool #1</span>
+      <h2>Pilot Project Dynamic Budget Scaler</h2>
+      <p>Test how funding levels alter the scope of the "Black Sea Dialogue & Education Initiative". Drag the scale factor below to calculate line-item allocations in real-time.</p>
+    </div>
+
+    <div class="calculator-card">
+      <div class="slider-control-bar">
+        <div class="slider-info">
+          <label for="budgetSlider">Simulation Budget Scaling Multiplier: <strong>{{ budgetScaleMultiplier }}x</strong></label>
+          <span class="live-budget-callout">Projected Budget: <strong>${{ totalSimulatedBudget | number }} USD</strong></span>
+        </div>
+        <input id="budgetSlider"
+               type="range"
+               min="0.5"
+               max="3.0"
+               step="0.25"
+               [value]="budgetScaleMultiplier"
+               (input)="onBudgetSliderChange($event)"
+               class="modern-range-slider" />
+        <div class="slider-ticks">
+          <span>0.5x (Minimal $4.75k)</span>
+          <span>1.0x (Standard Baseline $9.5k)</span>
+          <span>2.0x (Expanded Scope $19k)</span>
+          <span>3.0x (Maximum $28.5k)</span>
+        </div>
+      </div>
+
+      <div class="budget-items-grid">
+        <div class="budget-row" *ngFor="let item of baseBudgetItems">
+          <div class="budget-info">
+            <div class="budget-title-row">
+              <strong>{{ item.category }}</strong>
+              <span class="priority-tag" [class]="item.priority.toLowerCase()">{{ item.priority }} Priority</span>
+            </div>
+            <p>{{ item.description }}</p>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" [style.width.%]="getCategoryPercentage(item.baseAmount)"></div>
+            </div>
+          </div>
+          <div class="budget-figures">
+            <div class="figure-usd">${{ getAdjustedAmount(item.baseAmount) | number }}</div>
+            <div class="figure-pct">{{ getCategoryPercentage(item.baseAmount) }}% of Total</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive Feature 2: Community Impact Estimator -->
+<section class="interactive-section">
+  <div class="shell-container">
+    <div class="section-heading-center">
+      <span class="section-tag">Interactive Simulation Tool #2</span>
+      <h2>Civic Outreach & Education Estimator</h2>
+      <p>Adjust volunteer staffing and dialogue workshops to simulate community reach across Nashua and transatlantic partners.</p>
+    </div>
+
+    <div class="impact-grid">
+      <div class="impact-controls-card">
+        <h3>Program Input Parameters</h3>
+
+        <div class="param-control">
+          <div class="param-header">
+            <label>Planned Dialogue Workshops:</label>
+            <span class="param-value">{{ plannedWorkshops }} Sessions</span>
+          </div>
+          <input type="range"
+                 min="2"
+                 max="18"
+                 step="1"
+                 [value]="plannedWorkshops"
+                 (input)="updateImpactControls(estimatedVolunteers, +$any($event.target).value)"
+                 class="modern-range-slider" />
+        </div>
+
+        <div class="param-control">
+          <div class="param-header">
+            <label>Active Civic Volunteers:</label>
+            <span class="param-value">{{ estimatedVolunteers }} People</span>
+          </div>
+          <input type="range"
+                 min="5"
+                 max="60"
+                 step="5"
+                 [value]="estimatedVolunteers"
+                 (input)="updateImpactControls(+$any($event.target).value, plannedWorkshops)"
+                 class="modern-range-slider" />
+        </div>
+
+        <div class="estimator-tip">
+          <p>💡 <em>Calculated in TypeScript using workshop capacity averages and historical community participation coefficients.</em></p>
+        </div>
+      </div>
+
+      <div class="impact-results-card">
+        <h3>Calculated Outreach Metrics</h3>
+
+        <div class="results-kpi-grid">
+          <div class="result-tile">
+            <span class="tile-label">Estimated Student Engagement</span>
+            <span class="tile-val highlight-blue">{{ estimatedStudentsReached }} Participants</span>
+            <small>Across NH high schools & partner campuses</small>
+          </div>
+
+          <div class="result-tile">
+            <span class="tile-label">Academic Policy Briefs Produced</span>
+            <span class="tile-val highlight-gold">{{ (plannedWorkshops * 0.5) | number:'1.0-0' }} Working Papers</span>
+            <small>Co-authored with Romanian researchers</small>
+          </div>
+
+          <div class="result-tile">
+            <span class="tile-label">Community Impact Score</span>
+            <span class="tile-val highlight-green">{{ engagementScore }} / 100</span>
+            <small>Track-two peacebuilding efficacy estimate</small>
+          </div>
+        </div>
+
+        <div class="tile-action">
+          <a routerLink="/projects" class="btn-primary-action small">
+            View Complete Pilot Project Proposal →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

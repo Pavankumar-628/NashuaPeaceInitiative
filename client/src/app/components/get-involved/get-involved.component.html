@@ -1,0 +1,85 @@
+<div class="shell-container page-padding">
+  <div class="form-layout-grid">
+    <div class="form-context">
+      <div class="sim-tag">Full-Stack Data Flow</div>
+      <h2>Participate in the Simulation</h2>
+      <p class="context-desc">
+        Your submission tests the full-stack loop: <strong>Angular 16 (Client) → ASP.NET Core 6 (API) → MySQL 8.0 (Database)</strong>.
+      </p>
+
+      <div class="pathway-info-box">
+        <h3>Simulation Parameters</h3>
+        <ul>
+          <li><strong>Simulated Pledge:</strong> Test monetary allocation calculations for academic speaker series.</li>
+          <li><strong>Volunteer:</strong> Add volunteer hours and workshop curriculum development to the database.</li>
+          <li><strong>Academic Advisory:</strong> Connect faculty researchers with the Romanian FUMN initiative.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="form-wrapper-card">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-row">
+          <label>Full Name *</label>
+          <input type="text" formControlName="name" class="styled-input" placeholder="e.g., Alex Bennett" />
+          <div *ngIf="f['name'].touched && f['name'].invalid" class="field-error">
+            Name is required (minimum 2 characters).
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>Email Address *</label>
+          <input type="email" formControlName="email" class="styled-input" placeholder="alex@domain.edu" />
+          <div *ngIf="f['email'].touched && f['email'].invalid" class="field-error">
+            Valid institutional or personal email required.
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>Organization / University</label>
+          <input type="text" formControlName="organization" class="styled-input" placeholder="e.g., Rivier University" />
+        </div>
+
+        <div class="form-row">
+          <label>Contribution Pathway</label>
+          <select formControlName="contributionType" class="styled-input">
+            <option value="Pledge">Simulated Funding Pledge ($ USD)</option>
+            <option value="Volunteer">Volunteer Coordination</option>
+            <option value="Advisory">Academic Advisory Board</option>
+          </select>
+        </div>
+
+        <!-- Dynamic Pledge Selector -->
+        <div class="pledge-panel" *ngIf="f['contributionType'].value === 'Pledge'">
+          <label>Pledge Preset ($ USD)</label>
+          <div class="preset-buttons">
+            <button type="button"
+                    *ngFor="let p of pledgePresets"
+                    class="preset-btn"
+                    [class.active]="f['pledgeAmount'].value === p"
+                    (click)="setPreset(p)">
+              ${{ p }}
+            </button>
+          </div>
+          <input type="number" formControlName="pledgeAmount" class="styled-input" min="0" />
+        </div>
+
+        <div class="form-row">
+          <label>Scope of Proposal / Statement *</label>
+          <textarea formControlName="message" rows="3" class="styled-input" placeholder="Explain your civic or educational proposal..."></textarea>
+          <div *ngIf="f['message'].touched && f['message'].invalid" class="field-error">
+            Please enter a statement of at least 10 characters.
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="isSubmitting" class="btn-modern submit-wide">
+          {{ isSubmitting ? 'Transmitting to ASP.NET API...' : 'Commit Simulation Record' }}
+        </button>
+
+        <div *ngIf="statusFeedback" [ngClass]="['feedback-box', statusFeedback.type]">
+          {{ statusFeedback.message }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<header class="app-header">
+  <div class="header-inner shell-container">
+    <div class="brand-block" routerLink="/" (click)="closeMenu()">
+      <div class="brand-crest">NPI</div>
+      <div>
+        <div class="brand-title">Nashua Peace Initiative</div>
+        <div class="brand-subtitle">Black Sea Region Diplomatic Simulation</div>
+      </div>
+    </div>
+
+    <button class="mobile-toggle" (click)="toggleMobileMenu()" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="nav-links" [class.open]="isMobileMenuOpen">
+      <!-- Fixed label: Home -->
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
+      <a routerLink="/region" routerLinkActive="active" (click)="closeMenu()">Littoral Zone</a>
+      <a routerLink="/peacebuilding" routerLinkActive="active" (click)="closeMenu()">Pillars</a>
+      <a routerLink="/projects" routerLinkActive="active" (click)="closeMenu()">Pilot Project</a>
+      <a routerLink="/partnerships" routerLinkActive="active" (click)="closeMenu()">FUMN Liaison</a>
+      <a routerLink="/documents" routerLinkActive="active" (click)="closeMenu()">Documents</a>
+      <a routerLink="/ngo-registration" routerLinkActive="active" (click)="closeMenu()">NH NGO Guide</a>
+      <a routerLink="/get-involved" class="cta-pill" (click)="closeMenu()">Get Involved</a>
+    </nav>
+  </div>
+</header>

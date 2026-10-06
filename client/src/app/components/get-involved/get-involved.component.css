@@ -1,0 +1,143 @@
+.form-layout-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+.form-context h2 {
+  font-size: 2.2rem;
+  color: var(--primary);
+  margin: 0.75rem 0;
+}
+
+.context-desc {
+  color: var(--text-sub);
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+.pathway-info-box {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+  .pathway-info-box h3 {
+    font-size: 1rem;
+    color: var(--primary);
+    margin-bottom: 0.85rem;
+  }
+
+  .pathway-info-box ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.88rem;
+    color: var(--text-sub);
+  }
+
+.form-wrapper-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.25rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.form-row {
+  margin-bottom: 1.25rem;
+}
+
+  .form-row label, .pledge-panel label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.4rem;
+  }
+
+.styled-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.92rem;
+  transition: border-color 0.2s ease;
+}
+
+  .styled-input:focus {
+    outline: none;
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+  }
+
+.pledge-panel {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+
+.preset-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.preset-btn {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+  .preset-btn.active {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #0284c7;
+  }
+
+.submit-wide {
+  width: 100%;
+  justify-content: center;
+  padding: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.field-error {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+}
+
+.feedback-box {
+  margin-top: 1.25rem;
+  padding: 0.85rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+}
+
+  .feedback-box.success {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .feedback-box.error {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+@media (max-width: 900px) {
+  .form-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}

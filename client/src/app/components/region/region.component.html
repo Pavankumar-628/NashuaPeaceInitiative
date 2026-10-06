@@ -1,0 +1,36 @@
+<div class="shell-container page-padding">
+  <header class="page-title-banner">
+    <div class="sim-tag">Geographic & Diplomatic Scope</div>
+    <h1>The Black Sea Littoral Zone</h1>
+    <p>Explore the six littoral nations, their strategic maritime coordinates, and their diplomatic alignments.</p>
+  </header>
+
+  <!-- Filter & Search Controls -->
+  <div class="controls-toolbar">
+    <div class="filter-pill-group">
+      <button class="pill-btn" [class.active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">All Littoral States</button>
+      <button class="pill-btn" [class.active]="activeFilter === 'EU-NATO'" (click)="setFilter('EU-NATO')">EU / NATO Members</button>
+      <button class="pill-btn" [class.active]="activeFilter === 'Candidate'" (click)="setFilter('Candidate')">EU Candidates</button>
+    </div>
+
+    <div class="search-input-wrap">
+      <input type="text"
+             [(ngModel)]="searchQuery"
+             placeholder="Filter by country or keyword..."
+             class="modern-search" />
+    </div>
+  </div>
+
+  <!-- State Cards Grid -->
+  <div class="states-grid">
+    <div class="state-card" *ngFor="let s of filteredStates">
+      <div class="state-card-header">
+        <span class="category-chip" [style.borderLeftColor]="s.statusColor">{{ s.category }}</span>
+        <span class="coastline-tag">{{ s.coastlineKm }} km Coast</span>
+      </div>
+      <h3>{{ s.name }}</h3>
+      <div class="capital-sub">Capital: <strong>{{ s.capital }}</strong></div>
+      <p class="state-desc">{{ s.significance }}</p>
+    </div>
+  </div>
+</div>
