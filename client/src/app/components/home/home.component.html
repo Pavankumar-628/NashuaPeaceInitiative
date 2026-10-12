@@ -1,216 +1,442 @@
-<!-- Hero Banner -->
-<section class="hero-wrapper">
-  <div class="shell-container hero-grid">
-    <div class="hero-text-block">
-      <div class="status-pill">
-        <span class="live-dot"></span> Active Simulation • Rivier University COMP-699-B
-      </div>
-      <h1 class="hero-title">
-        Nashua Peace Initiative for the <span class="text-gradient">Black Sea Region</span>
-      </h1>
-      <p class="hero-description">
-        Modeling track-two diplomacy, academic exchange, and conflict mitigation. Connecting civic participants in Nashua, New Hampshire with educational institutions in Romania, including the Black Sea University Foundation (FUMN).
-      </p>
 
-      <div class="cta-row">
-        <a routerLink="/get-involved" class="btn-primary-action">
-          Take Part in the Simulation
-          <span class="icon">→</span>
-        </a>
-        <a routerLink="/region" class="btn-secondary-action">
-          Explore Littoral States
-        </a>
+<main id="home" class="home-page">
+
+  <!-- Hero -->
+  <section class="hero-wrapper">
+    <div class="page-container hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="eyebrow-dot"></span> Education · Dialogue · Peacebuilding</span>
+
+        <h1 class="hero-title">
+          Building understanding.<br />
+          <span class="text-gradient">Creating space for peace.</span>
+        </h1>
+
+        <p class="hero-description">
+          Explore the history, geography, and diplomacy of the Black Sea region
+          through educational resources, regional insights, and interactive
+          peacebuilding planning tools.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" type="button"
+                  (click)="scrollToSection('regions')">
+            Explore the region <span aria-hidden="true">→</span>
+          </button>
+          <button class="btn btn-secondary" type="button"
+                  (click)="scrollToSection('initiatives')">
+            Discover initiatives
+          </button>
+        </div>
+
+        <div class="hero-stats">
+          <div>
+            <strong>{{ flashpoints.length }}</strong>
+            <span>Regional learning areas</span>
+          </div>
+          <div>
+            <strong>{{ initiatives.length }}</strong>
+            <span>Educational themes</span>
+          </div>
+          <div>
+            <strong>1</strong>
+            <span>Shared goal: dialogue</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Quick Metrics Strip -->
-      <div class="quick-kpis">
-        <div class="kpi-box">
-          <div class="kpi-num">6</div>
-          <div class="kpi-desc">Littoral States Monitored</div>
+      <aside class="hero-feature-card">
+        <div class="feature-card-top">
+          <span class="feature-icon">🌐</span>
+          <span class="feature-label">Regional learning spotlight</span>
         </div>
-        <div class="kpi-box">
-          <div class="kpi-num">${{ totalSimulatedBudget | number }}</div>
-          <div class="kpi-desc">Simulated Pilot Capital</div>
+        <p class="mini-label">FEATURED AREA</p>
+        <h2>{{ selectedZone.name }}</h2>
+        <p class="feature-description">{{ selectedZone.initiativeAction }}</p>
+        <div class="feature-meta">
+          <span>{{ selectedZone.littoralNation }}</span>
+          <span class="status-pill">{{ selectedZone.securityStatus }}</span>
         </div>
-        <div class="kpi-box">
-          <div class="kpi-num">{{ engagementScore }}/100</div>
-          <div class="kpi-desc">Civic Impact Index</div>
+        <button class="text-link" type="button"
+                (click)="scrollToSection('regions')">
+          Explore regional context <span aria-hidden="true">↗</span>
+        </button>
+        <p class="disclaimer">
+          Educational content only. Status labels are illustrative categories,
+          not live security assessments.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Navigation shortcuts -->
+  <section class="shortcut-strip" aria-label="Quick navigation">
+    <div class="page-container shortcut-list">
+      <button type="button" (click)="scrollToSection('regions')">🌍 Regional explorer</button>
+      <button type="button" (click)="scrollToSection('budget')">📊 Budget simulator</button>
+      <button type="button" (click)="scrollToSection('impact')">🎯 Impact estimator</button>
+      <button type="button" (click)="scrollToSection('faq')">❔ FAQs</button>
+    </div>
+  </section>
+
+  <!-- Regional explorer -->
+  <section id="regions" class="content-section">
+    <div class="page-container">
+      <div class="section-heading">
+        <span class="section-kicker">Explore the region</span>
+        <h2>Understand the places shaping the conversation</h2>
+        <p>Search the learning areas, select a topic, and explore its educational context.</p>
+      </div>
+
+      <div class="explorer-layout">
+        <div class="panel region-list-panel">
+          <div class="panel-heading">
+            <h3>Regional learning areas</h3>
+            <span class="count-badge">{{ filteredFlashpoints.length }} results</span>
+          </div>
+
+          <label class="field-label" for="regionSearch">Search regions</label>
+          <input id="regionSearch" class="text-input"
+                 type="search"
+                 placeholder="Search name, country, or topic..."
+                 [value]="regionSearch"
+                 (input)="onRegionSearch($any($event.target).value)" />
+
+          <label class="field-label" for="regionStatus">Filter by category</label>
+          <select id="regionStatus" class="text-input"
+                  [value]="selectedStatus"
+                  (change)="onStatusFilter($any($event.target).value)">
+            <option>All</option>
+            <option>Academic Hub</option>
+            <option>Critical Transit</option>
+            <option>High Friction</option>
+            <option>Monitoring</option>
+          </select>
+
+          <button class="reset-link" type="button" (click)="resetRegionFilters()">
+            Reset filters
+          </button>
+
+          <div class="region-options" *ngIf="filteredFlashpoints.length; else noRegions">
+            <button class="region-option"
+                    *ngFor="let zone of filteredFlashpoints"
+                    type="button"
+                    [class.selected]="selectedZone.id === zone.id"
+                    (click)="selectZone(zone)">
+              <span class="region-option-icon">⌖</span>
+              <span class="region-option-text">
+                <strong>{{ zone.name }}</strong>
+                <small>{{ zone.littoralNation }}</small>
+              </span>
+              <span class="option-arrow" aria-hidden="true">→</span>
+            </button>
+          </div>
+
+          <ng-template #noRegions>
+            <p class="empty-state">No regions match your search. Try another keyword or reset the filters.</p>
+          </ng-template>
+        </div>
+
+        <article class="panel region-detail-panel">
+          <div class="detail-topline">
+            <span class="section-kicker">Selected learning area</span>
+            <span class="status-indicator" [style.background]="selectedZone.statusColor"></span>
+          </div>
+          <h3>{{ selectedZone.name }}</h3>
+          <p class="region-country">{{ selectedZone.littoralNation }}</p>
+
+          <div class="coordinate-box">
+            <span>Approximate reference coordinates</span>
+            <strong>{{ selectedZone.coordinates }}</strong>
+          </div>
+
+          <div class="detail-block">
+            <span class="detail-label">Topic to understand</span>
+            <p>{{ selectedZone.keyChallenge }}</p>
+          </div>
+
+          <div class="detail-block action-detail">
+            <span class="detail-label">Educational activity idea</span>
+            <p>{{ selectedZone.initiativeAction }}</p>
+          </div>
+
+          <p class="disclaimer">
+            This section is for educational exploration and is not a live
+            intelligence, military, or maritime monitoring service.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Budget simulator -->
+  <section id="budget" class="content-section section-tinted">
+    <div class="page-container">
+      <div class="section-heading">
+        <span class="section-kicker">Planning tool</span>
+        <h2>Explore an illustrative project budget</h2>
+        <p>Adjust the scale to see how hypothetical planning allocations change.</p>
+      </div>
+
+      <div class="panel budget-panel">
+        <div class="budget-summary">
+          <div>
+            <span class="summary-label">Illustrative total</span>
+            <strong class="budget-total">{{ formatCurrency(totalSimulatedBudget) }}</strong>
+            <p>Planning estimate only — not confirmed funding.</p>
+          </div>
+          <button class="btn btn-secondary btn-compact" type="button"
+                  (click)="resetBudget()">
+            Reset budget
+          </button>
+        </div>
+
+        <div class="slider-panel">
+          <div class="slider-heading">
+            <label for="budgetScale">Planning scale</label>
+            <strong>{{ budgetScaleMultiplier | number:'1.1-1' }}×</strong>
+          </div>
+          <input id="budgetScale" class="range-input" type="range"
+                 min="0.5" max="2" step="0.1"
+                 [value]="budgetScaleMultiplier"
+                 (input)="onBudgetSliderChange($any($event.target).value)" />
+          <div class="range-ends"><span>50%</span><span>100%</span><span>200%</span></div>
+        </div>
+
+        <div class="budget-items">
+          <article class="budget-row" *ngFor="let item of baseBudgetItems">
+            <div class="budget-item-main">
+              <div class="budget-title-line">
+                <h3>{{ item.category }}</h3>
+                <span class="priority-tag" [ngClass]="item.priority.toLowerCase()">
+                  {{ item.priority }}
+                </span>
+              </div>
+              <p>{{ item.description }}</p>
+              <div class="progress-track">
+                <div class="progress-fill"
+                     [style.width.%]="getCategoryPercentage(item.baseAmount)"></div>
+              </div>
+              <small>{{ getCategoryPercentage(item.baseAmount) }}% of the illustrative total</small>
+            </div>
+            <strong class="budget-amount">
+              {{ formatCurrency(getAdjustedAmount(item.baseAmount)) }}
+            </strong>
+          </article>
+        </div>
+        <p class="disclaimer">
+          Amounts are hypothetical examples created for this academic project.
+          They do not indicate actual expenses, grants, donations, or commitments.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact estimator -->
+  <section id="impact" class="content-section">
+    <div class="page-container">
+      <div class="section-heading">
+        <span class="section-kicker">Scenario planner</span>
+        <h2>Estimate possible educational reach</h2>
+        <p>Change the assumptions to see how a hypothetical programme scenario responds.</p>
+      </div>
+
+      <div class="impact-layout">
+        <div class="panel controls-panel">
+          <div class="panel-heading">
+            <h3>Adjust your scenario</h3>
+            <button class="reset-link" type="button" (click)="resetImpactEstimator()">Reset</button>
+          </div>
+
+          <div class="control-group">
+            <div class="slider-heading">
+              <label for="volunteers">Potential volunteers</label>
+              <strong>{{ estimatedVolunteers }}</strong>
+            </div>
+            <input id="volunteers" class="range-input" type="range"
+                   min="0" max="100" step="1"
+                   [value]="estimatedVolunteers"
+                   (input)="onVolunteerChange($any($event.target).value)" />
+            <div class="range-ends"><span>0</span><span>100</span></div>
+          </div>
+
+          <div class="control-group">
+            <div class="slider-heading">
+              <label for="workshops">Planned workshops</label>
+              <strong>{{ plannedWorkshops }}</strong>
+            </div>
+            <input id="workshops" class="range-input" type="range"
+                   min="0" max="20" step="1"
+                   [value]="plannedWorkshops"
+                   (input)="onWorkshopChange($any($event.target).value)" />
+            <div class="range-ends"><span>0</span><span>20</span></div>
+          </div>
+
+          <div class="note-box">
+            <strong>How is this estimated?</strong>
+            <p>The page uses a simple illustrative formula, not real attendance data or a validated impact model.</p>
+          </div>
+        </div>
+
+        <div class="impact-results">
+          <article class="metric-card metric-primary">
+            <span>Estimated student reach</span>
+            <strong>{{ estimatedStudentsReached }}</strong>
+            <small>Hypothetical participant-reach estimate</small>
+          </article>
+          <article class="metric-card">
+            <span>Illustrative engagement score</span>
+            <strong>{{ engagementScore }}<small class="out-of">/ 100</small></strong>
+            <div class="metric-track">
+              <div class="metric-fill" [style.width.%]="engagementScore"></div>
+            </div>
+            <small>Formula-based planning indicator, not measured engagement</small>
+          </article>
+          <article class="metric-card">
+            <span>Scenario inputs</span>
+            <strong>{{ estimatedVolunteers + plannedWorkshops }}</strong>
+            <small>Volunteers plus planned workshops</small>
+          </article>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- Live Regional Radar Card -->
-    <div class="radar-card">
-      <div class="radar-top">
-        <div class="radar-title-group">
-          <span class="badge-tech">Regional Conflict Radar</span>
-          <h3>Strategic Littoral Flashpoints</h3>
-        </div>
-        <span class="coord-tag">{{ selectedZone.coordinates }}</span>
+  <!-- Initiatives -->
+  <section id="initiatives" class="content-section section-tinted">
+    <div class="page-container">
+      <div class="section-heading">
+        <span class="section-kicker">Ways to learn</span>
+        <h2>Explore peacebuilding initiatives</h2>
+        <p>Browse educational themes that can support research and dialogue.</p>
       </div>
 
-      <!-- Interactive Switcher Tabs -->
-      <div class="zone-selector-chips">
-        <button *ngFor="let zone of flashpoints"
-                class="zone-chip"
-                [class.active]="selectedZone.id === zone.id"
-                (click)="selectZone(zone)">
-          {{ zone.name.split(' ')[0] }}
+      <div class="filter-row">
+        <input class="text-input search-initiative" type="search"
+               aria-label="Search initiatives"
+               placeholder="Search initiatives..."
+               [value]="initiativeSearch"
+               (input)="onInitiativeSearch($any($event.target).value)" />
+        <select class="text-input category-select"
+                aria-label="Filter initiatives by category"
+                [value]="selectedInitiativeCategory"
+                (change)="onInitiativeCategoryChange($any($event.target).value)">
+          <option>All</option>
+          <option>Education</option>
+          <option>Research</option>
+          <option>Resources</option>
+        </select>
+        <button class="btn btn-secondary btn-compact" type="button"
+                (click)="resetInitiativeFilters()">
+          Reset
         </button>
       </div>
 
-      <!-- Live Card Content -->
-      <div class="zone-display-panel">
-        <div class="zone-status-header">
-          <span class="nation-label">{{ selectedZone.littoralNation }}</span>
-          <span class="status-badge" [style.backgroundColor]="selectedZone.statusColor + '20'" [style.color]="selectedZone.statusColor">
-            ● {{ selectedZone.securityStatus }}
-          </span>
-        </div>
-        <h4>{{ selectedZone.name }}</h4>
-
-        <div class="challenge-box">
-          <strong>Geopolitical Friction:</strong>
-          <p>{{ selectedZone.keyChallenge }}</p>
-        </div>
-
-        <div class="action-box">
-          <strong>Proposed Civic Intervention:</strong>
-          <p>{{ selectedZone.initiativeAction }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Interactive Feature 1: Dynamic Pilot Project Budget Simulator -->
-<section class="interactive-section bg-alt">
-  <div class="shell-container">
-    <div class="section-heading-center">
-      <span class="section-tag">Interactive Simulation Tool #1</span>
-      <h2>Pilot Project Dynamic Budget Scaler</h2>
-      <p>Test how funding levels alter the scope of the "Black Sea Dialogue & Education Initiative". Drag the scale factor below to calculate line-item allocations in real-time.</p>
-    </div>
-
-    <div class="calculator-card">
-      <div class="slider-control-bar">
-        <div class="slider-info">
-          <label for="budgetSlider">Simulation Budget Scaling Multiplier: <strong>{{ budgetScaleMultiplier }}x</strong></label>
-          <span class="live-budget-callout">Projected Budget: <strong>${{ totalSimulatedBudget | number }} USD</strong></span>
-        </div>
-        <input id="budgetSlider"
-               type="range"
-               min="0.5"
-               max="3.0"
-               step="0.25"
-               [value]="budgetScaleMultiplier"
-               (input)="onBudgetSliderChange($event)"
-               class="modern-range-slider" />
-        <div class="slider-ticks">
-          <span>0.5x (Minimal $4.75k)</span>
-          <span>1.0x (Standard Baseline $9.5k)</span>
-          <span>2.0x (Expanded Scope $19k)</span>
-          <span>3.0x (Maximum $28.5k)</span>
-        </div>
+      <div class="initiative-grid" *ngIf="filteredInitiatives.length; else noInitiatives">
+        <article class="initiative-card" *ngFor="let item of filteredInitiatives">
+          <div class="initiative-icon">{{ item.icon }}</div>
+          <span class="section-kicker">{{ item.category }}</span>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+          <button class="text-link" type="button" (click)="goToInitiative(item.action)">
+            Explore topic <span aria-hidden="true">→</span>
+          </button>
+        </article>
       </div>
 
-      <div class="budget-items-grid">
-        <div class="budget-row" *ngFor="let item of baseBudgetItems">
-          <div class="budget-info">
-            <div class="budget-title-row">
-              <strong>{{ item.category }}</strong>
-              <span class="priority-tag" [class]="item.priority.toLowerCase()">{{ item.priority }} Priority</span>
-            </div>
-            <p>{{ item.description }}</p>
-            <div class="progress-bar-bg">
-              <div class="progress-bar-fill" [style.width.%]="getCategoryPercentage(item.baseAmount)"></div>
-            </div>
-          </div>
-          <div class="budget-figures">
-            <div class="figure-usd">${{ getAdjustedAmount(item.baseAmount) | number }}</div>
-            <div class="figure-pct">{{ getCategoryPercentage(item.baseAmount) }}% of Total</div>
-          </div>
-        </div>
-      </div>
+      <ng-template #noInitiatives>
+        <p class="empty-state">No initiatives found. Try a different search or category.</p>
+      </ng-template>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Interactive Feature 2: Community Impact Estimator -->
-<section class="interactive-section">
-  <div class="shell-container">
-    <div class="section-heading-center">
-      <span class="section-tag">Interactive Simulation Tool #2</span>
-      <h2>Civic Outreach & Education Estimator</h2>
-      <p>Adjust volunteer staffing and dialogue workshops to simulate community reach across Nashua and transatlantic partners.</p>
-    </div>
-
-    <div class="impact-grid">
-      <div class="impact-controls-card">
-        <h3>Program Input Parameters</h3>
-
-        <div class="param-control">
-          <div class="param-header">
-            <label>Planned Dialogue Workshops:</label>
-            <span class="param-value">{{ plannedWorkshops }} Sessions</span>
-          </div>
-          <input type="range"
-                 min="2"
-                 max="18"
-                 step="1"
-                 [value]="plannedWorkshops"
-                 (input)="updateImpactControls(estimatedVolunteers, +$any($event.target).value)"
-                 class="modern-range-slider" />
-        </div>
-
-        <div class="param-control">
-          <div class="param-header">
-            <label>Active Civic Volunteers:</label>
-            <span class="param-value">{{ estimatedVolunteers }} People</span>
-          </div>
-          <input type="range"
-                 min="5"
-                 max="60"
-                 step="5"
-                 [value]="estimatedVolunteers"
-                 (input)="updateImpactControls(+$any($event.target).value, plannedWorkshops)"
-                 class="modern-range-slider" />
-        </div>
-
-        <div class="estimator-tip">
-          <p>💡 <em>Calculated in TypeScript using workshop capacity averages and historical community participation coefficients.</em></p>
-        </div>
+  <!-- Milestones -->
+  <section id="milestones" class="content-section">
+    <div class="page-container">
+      <div class="section-heading">
+        <span class="section-kicker">Development roadmap</span>
+        <h2>Building the learning experience step by step</h2>
+        <p>Illustrative development milestones for organizing the academic project.</p>
       </div>
 
-      <div class="impact-results-card">
-        <h3>Calculated Outreach Metrics</h3>
-
-        <div class="results-kpi-grid">
-          <div class="result-tile">
-            <span class="tile-label">Estimated Student Engagement</span>
-            <span class="tile-val highlight-blue">{{ estimatedStudentsReached }} Participants</span>
-            <small>Across NH high schools & partner campuses</small>
+      <div class="milestone-grid">
+        <article class="milestone-card" *ngFor="let milestone of milestones">
+          <div class="milestone-top">
+            <span class="milestone-dot"></span>
+            <span class="milestone-status">{{ milestone.status }}</span>
           </div>
-
-          <div class="result-tile">
-            <span class="tile-label">Academic Policy Briefs Produced</span>
-            <span class="tile-val highlight-gold">{{ (plannedWorkshops * 0.5) | number:'1.0-0' }} Working Papers</span>
-            <small>Co-authored with Romanian researchers</small>
+          <h3>{{ milestone.title }}</h3>
+          <p>{{ milestone.description }}</p>
+          <div class="milestone-progress-label">
+            <span>Illustrative progress</span>
+            <strong>{{ milestone.progress }}%</strong>
           </div>
-
-          <div class="result-tile">
-            <span class="tile-label">Community Impact Score</span>
-            <span class="tile-val highlight-green">{{ engagementScore }} / 100</span>
-            <small>Track-two peacebuilding efficacy estimate</small>
+          <div class="progress-track">
+            <div class="progress-fill" [style.width.%]="milestone.progress"></div>
           </div>
-        </div>
+        </article>
+      </div>
+      <p class="disclaimer">
+        Milestone percentages are editable planning examples. Update them to reflect
+        your actual project progress before presenting them as current status.
+      </p>
+    </div>
+  </section>
 
-        <div class="tile-action">
-          <a routerLink="/projects" class="btn-primary-action small">
-            View Complete Pilot Project Proposal →
-          </a>
-        </div>
+  <!-- FAQ -->
+  <section id="faq" class="content-section section-tinted">
+    <div class="page-container faq-layout">
+      <div class="faq-intro">
+        <span class="section-kicker">Helpful information</span>
+        <h2>Frequently asked questions</h2>
+        <p>Quick answers about the website and its interactive planning tools.</p>
+        <button class="btn btn-primary" type="button" (click)="goToInitiative('feedback')">
+          Send feedback
+        </button>
+      </div>
+
+      <div class="faq-list">
+        <article class="faq-item" *ngFor="let faq of faqs; let i = index">
+          <button class="faq-question" type="button"
+                  [attr.aria-expanded]="faq.open"
+                  (click)="toggleFaq(i)">
+            <span>{{ faq.question }}</span>
+            <span class="faq-toggle">{{ faq.open ? '−' : '+' }}</span>
+          </button>
+          <div class="faq-answer" *ngIf="faq.open">
+            <p>{{ faq.answer }}</p>
+          </div>
+        </article>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- Final call to action -->
+  <section class="closing-section">
+    <div class="page-container closing-content">
+      <div>
+        <span class="closing-kicker">Learn · Share · Participate</span>
+        <h2>Make dialogue part of the journey.</h2>
+        <p>Explore the resources, learn about the region, and share feedback to help improve this educational project.</p>
+      </div>
+      <div class="closing-actions">
+        <button class="btn btn-light" type="button" (click)="goToInitiative('get-involved')">
+          Get involved
+        </button>
+        <button class="btn btn-outline-light" type="button" (click)="copyProjectUrl()">
+          {{ copiedProjectUrl ? 'Link copied' : 'Copy page link' }}
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="home-footer">
+    <div class="page-container footer-content">
+      <p>Nashua Peacebuilding Initiative · Academic educational project</p>
+      <button type="button" class="back-to-top" (click)="scrollToSection('home')">
+        Back to top ↑
+      </button>
+    </div>
+  </footer>
+
+</main>
