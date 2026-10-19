@@ -1,111 +1,534 @@
-<main class="projects-page">
-  <section class="hero">
-    <p class="eyebrow">NASHUA PEACEBUILDING INITIATIVE</p>
-    <h1>Pilot Projects &amp; Interactive String Lab</h1>
-    <p class="hero-copy">Every tool gives visible feedback in the browser.</p>
-    <div class="hero-meta">
-      <span>Angular component: <strong>Projects</strong></span>
-      <span>Prepared by <strong>{{ author }}</strong></span>
-    </div>
-  </section>
+<main class="workspace">
+  <header class="hero">
+    <p class="eyebrow">PLANNING WORKSPACE · ACADEMIC PROTOTYPE</p>
+    <h1>Nashua Peace Initiative</h1>
+    <p>
+      Organize proposed initiatives, stakeholder engagement,
+      community concerns, budgets, and dialogue notes.
+    </p>
 
-  <section class="section-heading">
-    <div>
-      <p class="eyebrow">SAMPLE DATA ARRAY</p>
-      <h2>Pilot project collection</h2>
-      <p>These records are illustrative academic concepts, not claims of active programs.</p>
-    </div>
-    <span class="count-pill">{{ pilotProjects.length }} sample projects</span>
-  </section>
-
-  <section class="project-grid">
-    <article class="project-card" *ngFor="let project of pilotProjects">
-      <div class="card-topline"><span class="status">{{ project.status }}</span><span class="region">{{ project.region }}</span></div>
-      <h3>{{ project.title }}</h3>
-      <p>{{ project.description }}</p>
-      <div class="tag-list"><span class="tag" *ngFor="let keyword of project.keywords">{{ keyword }}</span></div>
-    </article>
-  </section>
-
-  <section class="lab-intro">
-    <p class="eyebrow">TRY IT YOURSELF</p>
-    <h2>Six interactive problems</h2>
-    <p>Type into a box, select the action, and read the result. Inputs are processed locally in this page.</p>
-  </section>
-
-  <section class="exercise-grid">
-    <article class="exercise-card">
-      <div class="exercise-number">01</div><h3>Sentence inspector</h3>
-      <p class="problem">Count all characters, characters without spaces, and words in your sentence.</p>
-      <label for="sentenceInput">Your sentence</label>
-      <textarea id="sentenceInput" [(ngModel)]="sentenceInput" rows="3" placeholder="Peace begins with listening."></textarea>
-      <button type="button" (click)="analyzeSentence()">Analyze sentence</button>
-      <p class="result" aria-live="polite" *ngIf="sentenceResult">{{ sentenceResult }}</p>
-      <p class="concept">Uses: <code>length</code>, <code>trim()</code>, <code>split()</code>, regex.</p>
-    </article>
-
-    <article class="exercise-card">
-      <div class="exercise-number">02</div><h3>Palindrome checker</h3>
-      <p class="problem">Check whether a word or phrase reads the same backwards, ignoring spaces and punctuation.</p>
-      <label for="palindromeInput">Word or phrase</label>
-      <input id="palindromeInput" [(ngModel)]="palindromeInput" placeholder="Never odd or even" />
-      <button type="button" (click)="checkPalindrome()">Check palindrome</button>
-      <p class="result" aria-live="polite" *ngIf="palindromeResult">{{ palindromeResult }}</p>
-      <p class="concept">Uses: <code>toLowerCase()</code>, <code>replace()</code>, <code>reverse()</code>.</p>
-    </article>
-
-    <article class="exercise-card">
-      <div class="exercise-number">03</div><h3>Word-frequency counter</h3>
-      <p class="problem">Count each word and display the words alphabetically with their occurrence count.</p>
-      <label for="frequencyInput">Enter text</label>
-      <textarea id="frequencyInput" [(ngModel)]="frequencyInput" rows="3" placeholder="Dialogue builds trust. Dialogue builds understanding."></textarea>
-      <button type="button" (click)="countWordFrequency()">Count words</button>
-      <div class="result" aria-live="polite" *ngIf="frequencyResult.length">
-        <span class="frequency-item" *ngFor="let item of frequencyResult">{{ item.word }} <strong>{{ item.count }}</strong></span>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <span>Initiatives</span>
+        <strong>{{ initiatives.length }}</strong>
       </div>
-      <p class="concept">Uses: arrays, <code>match()</code>, object counters, <code>sort()</code>.</p>
-    </article>
 
-    <article class="exercise-card">
-      <div class="exercise-number">04</div><h3>Find a pilot project</h3>
-      <p class="problem">Search sample data by title, region, status, description, or any project keyword.</p>
-      <label for="projectSearch">Search projects</label>
-      <input id="projectSearch" [(ngModel)]="projectSearch" (ngModelChange)="searchProjects()" placeholder="Try: dialogue, Romania, research" />
-      <div class="search-results" aria-live="polite">
-        <p class="muted" *ngIf="searchResults.length === 0">No matches. Try a different word.</p>
-        <div class="mini-result" *ngFor="let project of searchResults">
-          <strong>{{ project.title }}</strong><span>{{ project.region }} · {{ project.status }}</span>
+      <div class="summary-card">
+        <span>Stakeholder records</span>
+        <strong>{{ stakeholders.length }}</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Concerns to review</span>
+        <strong>{{ concerns.length }}</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Dialogue words</span>
+        <strong>{{ dialogueWordCount }}</strong>
+      </div>
+    </div>
+  </header>
+
+  <p class="notice">
+    Prototype notice: records are user-entered planning data.
+    They do not verify real-world partners, funding, events, or
+    participation. Avoid entering sensitive personal information.
+  </p>
+
+  <p class="message" *ngIf="workspaceMessage" role="status">
+    {{ workspaceMessage }}
+  </p>
+
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">01 / INITIATIVES</p>
+        <h2>Initiative planner</h2>
+      </div>
+      <span class="count">
+        {{ filteredInitiatives.length }} shown
+      </span>
+    </div>
+
+    <form class="form-grid" (ngSubmit)="addInitiative()">
+      <label>
+        Initiative title
+        <input name="initiativeTitle"
+               [(ngModel)]="initiativeForm.title"
+               required
+               maxlength="120">
+      </label>
+
+      <label>
+        Location or corridor
+        <input name="initiativeLocation"
+               [(ngModel)]="initiativeForm.location"
+               maxlength="120">
+      </label>
+
+      <label>
+        Focus area
+        <input name="initiativeFocus"
+               [(ngModel)]="initiativeForm.focus"
+               placeholder="Dialogue, education, research">
+      </label>
+
+      <label>
+        Status
+        <select name="initiativeStatus"
+                [(ngModel)]="initiativeForm.status">
+          <option>Planned</option>
+          <option>Active</option>
+          <option>Monitoring</option>
+          <option>Completed</option>
+        </select>
+      </label>
+
+      <label>
+        Urgency: {{ initiativeForm.urgency }}/5
+        <input type="range"
+               name="initiativeUrgency"
+               min="1"
+               max="5"
+               [(ngModel)]="initiativeForm.urgency">
+      </label>
+
+      <label>
+        Expected impact: {{ initiativeForm.impact }}/5
+        <input type="range"
+               name="initiativeImpact"
+               min="1"
+               max="5"
+               [(ngModel)]="initiativeForm.impact">
+      </label>
+
+      <label>
+        Feasibility: {{ initiativeForm.feasibility }}/5
+        <input type="range"
+               name="initiativeFeasibility"
+               min="1"
+               max="5"
+               [(ngModel)]="initiativeForm.feasibility">
+      </label>
+
+      <label>
+        Community support estimate:
+        {{ initiativeForm.communitySupport }}/5
+        <input type="range"
+               name="initiativeSupport"
+               min="1"
+               max="5"
+               [(ngModel)]="initiativeForm.communitySupport">
+      </label>
+
+      <div class="form-actions">
+        <button type="submit">Add initiative</button>
+      </div>
+    </form>
+
+    <div class="toolbar">
+      <input aria-label="Search initiatives"
+             placeholder="Search title, location, or focus…"
+             [(ngModel)]="searchText"
+             name="initiativeSearch">
+
+      <select aria-label="Filter initiatives by status"
+              [(ngModel)]="statusFilter"
+              name="statusFilter">
+        <option>All</option>
+        <option>Planned</option>
+        <option>Active</option>
+        <option>Monitoring</option>
+        <option>Completed</option>
+      </select>
+    </div>
+
+    <div class="empty-state"
+         *ngIf="filteredInitiatives.length === 0">
+      No matching initiatives. Add a record or change the search.
+    </div>
+
+    <article class="record"
+             *ngFor="let item of filteredInitiatives">
+
+      <div class="record-top">
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>
+            {{ item.location || 'Location not specified' }}
+            ·
+            {{ item.focus || 'Focus not specified' }}
+          </p>
         </div>
-      </div>
-      <p class="concept">Uses: array of objects, <code>filter()</code>, <code>some()</code>, <code>includes()</code>.</p>
-    </article>
 
-    <article class="exercise-card">
-      <div class="exercise-number">05</div><h3>Unique-keyword explorer</h3>
-      <p class="problem">Combine keywords from the projects, remove duplicates, sort them, and filter the list.</p>
-      <label for="keywordFilter">Filter keywords</label>
-      <input id="keywordFilter" [(ngModel)]="keywordFilter" (ngModelChange)="filterKeywords()" placeholder="Try: edu or dialogue" />
-      <div class="tag-list result-tags" aria-live="polite">
-        <span class="tag" *ngFor="let keyword of filteredKeywords">{{ keyword }}</span>
-        <p class="muted" *ngIf="filteredKeywords.length === 0">No keywords match your filter.</p>
+        <span class="status">{{ item.status }}</span>
       </div>
-      <p class="concept">Uses: <code>reduce()</code>, <code>Set</code>, <code>Array.from()</code>, <code>filter()</code>.</p>
-    </article>
 
-    <article class="exercise-card">
-      <div class="exercise-number">06</div><h3>Acronym builder</h3>
-      <p class="problem">Build initials from a phrase while skipping common words such as “and,” “of,” and “the.”</p>
-      <label for="acronymInput">Enter a phrase</label>
-      <input id="acronymInput" [(ngModel)]="acronymInput" placeholder="Black Sea Dialogue Lab" />
-      <button type="button" (click)="makeAcronym()">Build acronym</button>
-      <p class="result acronym-result" aria-live="polite" *ngIf="acronymResult">{{ acronymResult }}</p>
-      <p class="concept">Uses: <code>split()</code>, <code>filter()</code>, <code>map()</code>, <code>charAt()</code>.</p>
+      <div class="metrics">
+        <span>
+          Priority estimate
+          <strong>{{ initiativePriority(item) }}/5</strong>
+        </span>
+
+        <span>Urgency {{ item.urgency }}/5</span>
+        <span>Impact {{ item.impact }}/5</span>
+      </div>
+
+      <div class="record-actions">
+        <label class="inline-label">
+          Update status
+          <select [ngModel]="item.status"
+                  (ngModelChange)="updateInitiativeStatus(item.id, $event)"
+                  [name]="'status-' + item.id">
+            <option>Planned</option>
+            <option>Active</option>
+            <option>Monitoring</option>
+            <option>Completed</option>
+          </select>
+        </label>
+
+        <button class="button-danger"
+                type="button"
+                (click)="removeInitiative(item.id)">
+          Remove
+        </button>
+      </div>
     </article>
   </section>
 
-  <div class="bottom-actions">
-    <p>All six exercises use sample data and browser-side logic. User input is not sent to a server or stored in a database.</p>
-    <button class="secondary-button" type="button" (click)="resetAll()">Reset all exercises</button>
-  </div>
-  <footer class="page-footer">Academic prototype · {{ author }} · COMP-699-B</footer>
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">02 / ENGAGEMENT</p>
+        <h2>Stakeholder planning records</h2>
+      </div>
+    </div>
+
+    <form class="form-grid" (ngSubmit)="addStakeholder()">
+      <label>
+        Record label or organization
+        <input name="stakeholderName"
+               [(ngModel)]="stakeholderForm.name"
+               required
+               maxlength="120">
+      </label>
+
+      <label>
+        Category
+        <select name="stakeholderCategory"
+                [(ngModel)]="stakeholderForm.category">
+          <option>Community group</option>
+          <option>Educational institution</option>
+          <option>Local organization</option>
+          <option>Mediator</option>
+          <option>Public agency</option>
+          <option>Other</option>
+        </select>
+      </label>
+
+      <label>
+        Engagement stage
+        <select name="stakeholderStage"
+                [(ngModel)]="stakeholderForm.stage">
+          <option>To contact</option>
+          <option>Invitation drafted</option>
+          <option>Discussion planned</option>
+          <option>Follow-up required</option>
+          <option>Participation recorded</option>
+        </select>
+      </label>
+
+      <label>
+        Planning note
+        <input name="stakeholderNote"
+               [(ngModel)]="stakeholderForm.note"
+               maxlength="240">
+      </label>
+
+      <div class="form-actions">
+        <button type="submit">Add record</button>
+      </div>
+    </form>
+
+    <div class="empty-state" *ngIf="stakeholders.length === 0">
+      No stakeholder planning records have been added.
+    </div>
+
+    <article class="record compact"
+             *ngFor="let person of stakeholders">
+      <div>
+        <h3>{{ person.name }}</h3>
+        <p>{{ person.category }} · {{ person.stage }}</p>
+        <p *ngIf="person.note">{{ person.note }}</p>
+      </div>
+
+      <button class="button-danger"
+              type="button"
+              (click)="removeStakeholder(person.id)">
+        Remove
+      </button>
+    </article>
+  </section>
+
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">03 / CONFLICT SENSITIVITY</p>
+        <h2>Community concern and risk review</h2>
+      </div>
+
+      <span class="count">
+        Combined score: {{ totalRiskScore }}
+      </span>
+    </div>
+
+    <p class="helper">
+      Rate each planning concern from 1 to 5. The score is a
+      simple prioritization aid, not a validated risk assessment.
+    </p>
+
+    <form class="form-grid" (ngSubmit)="addConcern()">
+      <label>
+        Concern description
+        <input name="concernTitle"
+               [(ngModel)]="concernForm.title"
+               required
+               maxlength="160">
+      </label>
+
+      <label>
+        Category
+        <select name="concernCategory"
+                [(ngModel)]="concernForm.category">
+          <option>Inclusion</option>
+          <option>Safety</option>
+          <option>Misinformation</option>
+          <option>Resources</option>
+          <option>Other</option>
+        </select>
+      </label>
+
+      <label>
+        Likelihood: {{ concernForm.likelihood }}/5
+        <input type="range"
+               name="concernLikelihood"
+               min="1"
+               max="5"
+               [(ngModel)]="concernForm.likelihood">
+      </label>
+
+      <label>
+        Impact: {{ concernForm.impact }}/5
+        <input type="range"
+               name="concernImpact"
+               min="1"
+               max="5"
+               [(ngModel)]="concernForm.impact">
+      </label>
+
+      <label>
+        Exposure: {{ concernForm.exposure }}/5
+        <input type="range"
+               name="concernExposure"
+               min="1"
+               max="5"
+               [(ngModel)]="concernForm.exposure">
+      </label>
+
+      <label>
+        Mitigation or follow-up
+        <input name="concernMitigation"
+               [(ngModel)]="concernForm.mitigation"
+               maxlength="240">
+      </label>
+
+      <div class="form-actions">
+        <button type="submit">Add concern</button>
+      </div>
+    </form>
+
+    <div class="empty-state" *ngIf="concerns.length === 0">
+      No concerns recorded yet.
+    </div>
+
+    <article class="record compact"
+             *ngFor="let concern of concerns">
+      <div>
+        <h3>{{ concern.title }}</h3>
+        <p>
+          {{ concern.category }} · Score:
+          <strong>{{ riskScore(concern) }}</strong> / 125
+        </p>
+        <p *ngIf="concern.mitigation">
+          Follow-up: {{ concern.mitigation }}
+        </p>
+      </div>
+
+      <button class="button-danger"
+              type="button"
+              (click)="removeConcern(concern.id)">
+        Remove
+      </button>
+    </article>
+  </section>
+
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">04 / RESOURCES</p>
+        <h2>Proposed budget planner</h2>
+      </div>
+    </div>
+
+    <label class="budget-total">
+      Proposed total budget
+      <input type="number"
+             min="0"
+             step="100"
+             name="totalBudget"
+             [(ngModel)]="totalBudget"
+             (ngModelChange)="saveWorkspace()">
+    </label>
+
+    <div class="budget-grid">
+      <label>
+        Dialogue sessions: {{ budgetAllocations.dialogue }}%
+        <input type="range"
+               min="0"
+               max="100"
+               [(ngModel)]="budgetAllocations.dialogue"
+               name="budgetDialogue"
+               (ngModelChange)="saveWorkspace()">
+        <strong>{{ budgetAmount(budgetAllocations.dialogue) | currency }}</strong>
+      </label>
+
+      <label>
+        Community outreach: {{ budgetAllocations.outreach }}%
+        <input type="range"
+               min="0"
+               max="100"
+               [(ngModel)]="budgetAllocations.outreach"
+               name="budgetOutreach"
+               (ngModelChange)="saveWorkspace()">
+        <strong>{{ budgetAmount(budgetAllocations.outreach) | currency }}</strong>
+      </label>
+
+      <label>
+        Research: {{ budgetAllocations.research }}%
+        <input type="range"
+               min="0"
+               max="100"
+               [(ngModel)]="budgetAllocations.research"
+               name="budgetResearch"
+               (ngModelChange)="saveWorkspace()">
+        <strong>{{ budgetAmount(budgetAllocations.research) | currency }}</strong>
+      </label>
+
+      <label>
+        Administration: {{ budgetAllocations.administration }}%
+        <input type="range"
+               min="0"
+               max="100"
+               [(ngModel)]="budgetAllocations.administration"
+               name="budgetAdministration"
+               (ngModelChange)="saveWorkspace()">
+        <strong>{{ budgetAmount(budgetAllocations.administration) | currency }}</strong>
+      </label>
+    </div>
+
+    <p class="validation"
+       [class.invalid]="!budgetIsValid">
+      Allocation total: {{ allocationTotal }}% —
+      {{
+ budgetIsValid
+        ? 'Totals are balanced.'
+        : 'Adjust percentages so the total equals 100%.'
+      }}
+    </p>
+
+    <p class="helper">
+      All values are proposed estimates and do not indicate
+      confirmed funding or spending.
+    </p>
+  </section>
+
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">05 / DIALOGUE NOTES</p>
+        <h2>Keyword review</h2>
+      </div>
+    </div>
+
+    <label>
+      Paste non-sensitive notes for a local keyword count
+      <textarea rows="6"
+                name="dialogueNotes"
+                [(ngModel)]="dialogueNotes"
+                (ngModelChange)="saveWorkspace()"
+                placeholder="Enter sample dialogue notes here…">
+      </textarea>
+    </label>
+
+    <div class="toolbar">
+      <span>{{ dialogueWordCount }} words</span>
+      <button type="button" (click)="analyzeDialogue()">
+        Analyze keywords
+      </button>
+    </div>
+
+    <div class="theme-grid">
+      <div class="theme-card" *ngFor="let theme of themes">
+        <span>{{ theme.label }}</span>
+        <strong>{{ theme.count }}</strong>
+        <small>keyword matches</small>
+      </div>
+    </div>
+
+    <p class="helper">
+      This is simple keyword matching, not sentiment analysis
+      or artificial intelligence. Always review the original context.
+    </p>
+  </section>
+
+  <section class="panel backup-panel">
+    <div>
+      <p class="eyebrow">06 / WORKSPACE</p>
+      <h2>Save and transfer sample data</h2>
+      <p class="helper">
+        Browser storage is local to this browser and device.
+        Export a backup if you need to move the workspace.
+      </p>
+    </div>
+
+    <div class="backup-actions">
+      <button type="button" (click)="saveWorkspace()">
+        Save workspace
+      </button>
+
+      <button type="button"
+              class="button-secondary"
+              (click)="exportWorkspace()">
+        Export JSON
+      </button>
+
+      <label class="file-button">
+        Import JSON
+        <input type="file"
+               accept="application/json,.json"
+               (change)="importWorkspace($event)">
+      </label>
+
+      <button type="button"
+              class="button-danger"
+              (click)="clearWorkspace()">
+        Clear workspace
+      </button>
+    </div>
+  </section>
+
+  <footer>
+    Academic prototype · Review records before using them for decisions.
+  </footer>
 </main>
