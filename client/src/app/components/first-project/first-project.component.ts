@@ -6,6 +6,7 @@ type InitiativeStatus =
 type RiskCategory =
   'Inclusion' | 'Safety' | 'Misinformation' | 'Resources' | 'Other';
 
+
 interface PeaceInitiative {
   id: string;
   title: string;
