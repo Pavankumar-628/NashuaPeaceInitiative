@@ -177,7 +177,7 @@ textarea {
 
 .form-actions {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
 }
 
 button,
@@ -234,7 +234,7 @@ button,
   display: flex;
   justify-content: space-between;
   gap: 14px;
-  align-items: start;
+  align-items: flex-start;
 }
 
 .record p {
@@ -259,7 +259,7 @@ button,
 
 .record-actions {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
 }
@@ -278,7 +278,7 @@ button,
 .compact {
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
   gap: 16px;
 }
 

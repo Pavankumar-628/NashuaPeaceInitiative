@@ -1,0 +1,470 @@
+:host {
+  display: block;
+  font-family: 'Times New Roman', Times, serif, system-ui;
+  background-color: #f7f9fc;
+  color: #1a2238;
+  padding: 1.5rem;
+}
+
+.partnerships-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #0e2439 0%, #1d405c 100%);
+  color: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.badge {
+  display: inline-block;
+  background-color: #008080;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+}
+
+.page-header h1 {
+  font-size: 2.2rem;
+  margin: 0.5rem 0;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.subtitle {
+  font-size: 1.05rem;
+  max-width: 850px;
+  margin: 0.5rem auto 1rem;
+  color: #d8e2ec;
+}
+
+.author-meta {
+  font-size: 0.9rem;
+  color: #b0c4de;
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.col-span-2 {
+  grid-column: span 2;
+}
+
+.module-card {
+  background: #ffffff;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.module-num {
+  background-color: #1d405c;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.card-header h2 {
+  font-size: 1.25rem;
+  margin: 0;
+  color: #0e2439;
+}
+
+.card-desc {
+  font-size: 0.92rem;
+  color: #555;
+  margin-bottom: 1.25rem;
+}
+
+/* Program 1 Dice Styles */
+.dice-stage {
+  text-align: center;
+  padding: 1rem;
+  background: #edf2f7;
+  border-radius: 6px;
+}
+
+.dice-group {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  font-size: 4rem;
+  color: #0e2439;
+  min-height: 80px;
+}
+
+.dice-box {
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+  .dice-box.rolling {
+    animation: shake 0.25s infinite;
+  }
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(10deg);
+  }
+
+  70% {
+    transform: rotate(-10deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.dice-stats {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0.75rem 0;
+  font-size: 0.95rem;
+}
+
+.sum-tag {
+  background: #008080;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 4px;
+}
+
+.dice-message {
+  font-style: italic;
+  font-weight: 500;
+  margin: 0.5rem 0 1rem;
+}
+
+/* Program 2 Lotto Styles */
+.lotto-inputs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+  .lotto-inputs label {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .lotto-inputs input {
+    width: 60px;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 5px;
+  }
+
+.balls-row {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.ball {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  font-weight: bold;
+  border: 2px solid #a0aec0;
+}
+
+  .ball.matched {
+    background: #2b6cb0;
+    color: white;
+    border-color: #1a365d;
+  }
+
+.lotto-results.win .result-alert {
+  color: #22543d;
+  font-weight: bold;
+  background: #c6f6d5;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.lotto-results.lose .result-alert {
+  color: #742a2a;
+  background: #fed7d7;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+/* Program 3 Grade Stats */
+.grade-stats-banner {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stat-box {
+  flex: 1;
+  background: #edf2f7;
+  border-left: 4px solid #008080;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.stat-val {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #0e2439;
+}
+
+.stat-lbl {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.data-table, .data-table-mini {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+  .data-table th, .data-table td,
+  .data-table-mini th, .data-table-mini td {
+    border: 1px solid #e2e8f0;
+    padding: 8px 12px;
+    text-align: left;
+  }
+
+  .data-table th {
+    background-color: #f7fafc;
+    color: #4a5568;
+  }
+
+.status-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+  .status-badge.pass {
+    background: #c6f6d5;
+    color: #22543d;
+  }
+
+  .status-badge.fail {
+    background: #fed7d7;
+    color: #742a2a;
+  }
+
+.inline-form {
+  display: flex;
+  gap: 0.75rem;
+}
+
+  .inline-form input {
+    padding: 8px;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+  }
+
+/* Program 4 ASCII Styles */
+.inspector-card {
+  display: flex;
+  align-items: center;
+  background: #f7fafc;
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border: 1px solid #edf2f7;
+}
+
+.char-hero {
+  font-size: 3rem;
+  font-weight: bold;
+  padding: 0 1.5rem;
+  border-right: 2px solid #cbd5e0;
+  color: #008080;
+}
+
+.char-specs {
+  list-style: none;
+  margin: 0 0 0 1.5rem;
+  padding: 0;
+  font-size: 0.95rem;
+}
+
+.ascii-scroll-box {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  margin-top: 1rem;
+}
+
+/* Program 5 Dictionary Styles */
+.lookup-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+  .lookup-bar input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+  }
+
+.dictionary-card {
+  background: #f0fff4;
+  border: 1px solid #9ae6b4;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+  .dictionary-card h3 {
+    margin-top: 0;
+    color: #22543d;
+  }
+
+.key-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.key-pill {
+  background: #e2e8f0;
+  color: #2d3748;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+  .key-pill:hover {
+    background: #008080;
+    color: white;
+  }
+
+.mini-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+  .mini-form input {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+/* Shared Buttons */
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: #0e2439;
+  color: white;
+}
+
+  .btn-primary:hover {
+    background: #1d405c;
+  }
+
+.btn-secondary {
+  background: #008080;
+  color: white;
+}
+
+  .btn-secondary:hover {
+    background: #006666;
+  }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #008080;
+  color: #008080;
+  margin-top: 0.5rem;
+}
+
+  .btn-outline:hover {
+    background: #008080;
+    color: white;
+  }
+
+.btn-add {
+  background: #2b6cb0;
+  color: white;
+}
+
+.btn-sm-del {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 850px) {
+  .modules-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .col-span-2 {
+    grid-column: span 1;
+  }
+
+  .grade-stats-banner {
+    flex-direction: column;
+  }
+
+  .inline-form {
+    flex-direction: column;
+  }
+
+  .mini-form {
+    grid-template-columns: 1fr;
+  }
+}

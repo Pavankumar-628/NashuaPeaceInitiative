@@ -1,7 +1,237 @@
-<div class="container">
-  <div class="card">
-    <h2>Institutional Partnerships (Proposed)</h2>
-    <h3>Black Sea University Foundation (FUMN)</h3>
-    <p>Located in Bucharest, Romania, FUMN focuses on regional security, diplomacy, and education. This simulated portal models academic collaboration with FUMN materials.</p>
+<section class="partnerships-container">
+  <!-- Header / Hero Section -->
+  <header class="page-header">
+    <div class="badge">Nashua Peacebuilding Initiative — Practice 7</div>
+    <h1>Institutional Partnerships & Computational Modules</h1>
+    <p class="subtitle">
+      Integrating five dynamic JavaScript client-side programs for peace analytics, cohort grading,
+      lottery micro-grants, Unicode parsing, and dictionary mapping.
+    </p>
+    <div class="author-meta">
+      <span><strong>Researcher:</strong> {{ studentAuthor }}</span> |
+      <span><strong>Course:</strong> {{ courseCode }}</span> |
+      <span><strong>Live Route:</strong> /partnerships</span>
+    </div>
+  </header>
+
+  <div class="modules-grid">
+    <!-- MODULE 1: 3-DICE SIMULATION -->
+    <article class="module-card">
+      <div class="card-header">
+        <span class="module-num">JS 1</span>
+        <h2>3-Dice Peace Initiative Simulator (gameDice)</h2>
+      </div>
+      <p class="card-desc">Simulates a random roll of three dice with graphical Unicode faces and conditional award evaluations.</p>
+
+      <div class="dice-stage">
+        <div class="dice-group">
+          <div class="dice-box" [class.rolling]="isRolling" *ngFor="let glyph of diceUnicode">{{ glyph }}</div>
+        </div>
+        <div class="dice-stats">
+          <span class="sum-tag">Sum: <strong>{{ diceSum }}</strong></span>
+          <span class="values-tag">Values: [ {{ diceValues.join(', ') }} ]</span>
+        </div>
+        <p class="dice-message">{{ diceMessage }}</p>
+        <button type="button" class="btn btn-primary" (click)="rollDice()" [disabled]="isRolling">
+          {{ isRolling ? 'Rolling...' : '🎲 Roll 3 Dice' }}
+        </button>
+      </div>
+    </article>
+
+    <!-- MODULE 2: REGIONAL LOTTO -->
+    <article class="module-card">
+      <div class="card-header">
+        <span class="module-num">JS 2</span>
+        <h2>Regional Lotto Grant Program (lotto.html)</h2>
+      </div>
+      <p class="card-desc">Guess 3 distinct numbers (1–49). Wins if at least 2 of your numbers are among the 6 randomly drawn.</p>
+
+      <div class="lotto-inputs">
+        <label>
+          Guess 1:
+          <input type="number" [(ngModel)]="lottoGuess1" min="1" max="49" />
+        </label>
+        <label>
+          Guess 2:
+          <input type="number" [(ngModel)]="lottoGuess2" min="1" max="49" />
+        </label>
+        <label>
+          Guess 3:
+          <input type="number" [(ngModel)]="lottoGuess3" min="1" max="49" />
+        </label>
+      </div>
+
+      <button type="button" class="btn btn-secondary" (click)="playLotto()">🎰 Draw Lotto Numbers</button>
+
+      <div *ngIf="drawnLottoNumbers.length > 0" class="lotto-results" [ngClass]="lottoResultStatus">
+        <p><strong>Drawn Numbers:</strong></p>
+        <div class="balls-row">
+          <span class="ball" *ngFor="let n of drawnLottoNumbers" [class.matched]="matchedNumbers.includes(n)">
+            {{ n }}
+          </span>
+        </div>
+        <p class="result-alert">{{ lottoMessage }}</p>
+      </div>
+      <p *ngIf="lottoResultStatus === 'invalid'" class="error-msg">{{ lottoMessage }}</p>
+    </article>
+
+    <!-- MODULE 3: STUDENT GRADES & STATS -->
+    <article class="module-card col-span-2">
+      <div class="card-header">
+        <span class="module-num">JS 3</span>
+        <h2>Peace Studies Fellowship Grade Roster & Statistics (dic2.html)</h2>
+      </div>
+      <p class="card-desc">Calculates cohort mean, high/low spread, and passing ratios for academic scholarship cohorts.</p>
+
+      <div class="grade-stats-banner">
+        <div class="stat-box">
+          <span class="stat-val">{{ gradeStats.count }}</span>
+          <span class="stat-lbl">Students</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">{{ gradeStats.average }}%</span>
+          <span class="stat-lbl">Mean Average</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">{{ gradeStats.highest }}%</span>
+          <span class="stat-lbl">Highest Grade</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">{{ gradeStats.lowest }}%</span>
+          <span class="stat-lbl">Lowest Grade</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">{{ gradeStats.passingCount }}</span>
+          <span class="stat-lbl">Passing (≥70)</span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Student Candidate</th>
+              <th>Score (%)</th>
+              <th>Evaluation Tier</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of studentRoster; let idx = index">
+              <td>{{ s.name }}</td>
+              <td><strong>{{ s.grade }}</strong></td>
+              <td>
+                <span class="status-badge" [class.pass]="s.grade >= 70" [class.fail]="s.grade < 70">
+                  {{ s.grade >= 70 ? 'Satisfactory' : 'Needs Review' }}
+                </span>
+              </td>
+              <td>
+                <button type="button" class="btn-sm-del" (click)="removeStudent(idx)">Remove</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <form class="inline-form" (ngSubmit)="addStudentGrade()">
+        <input type="text" placeholder="Candidate Name" [(ngModel)]="newStudentName" name="stName" required />
+        <input type="number" placeholder="Grade (0-100)" [(ngModel)]="newStudentGrade" name="stGrade" min="0" max="100" required />
+        <button type="submit" class="btn btn-add">+ Add Record</button>
+      </form>
+    </article>
+
+    <!-- MODULE 4: ASCII / UNICODE INSPECTOR -->
+    <article class="module-card">
+      <div class="card-header">
+        <span class="module-num">JS 4</span>
+        <h2>ASCII / Unicode Inspector & Code Reference Table</h2>
+      </div>
+      <p class="card-desc">Inspect character encodings (Decimal, Hex, Binary) and generate full printable ASCII tables dynamically.</p>
+
+      <div class="char-input-group">
+        <label for="charInput">Input Character:</label>
+        <input id="charInput" type="text" maxlength="1" [(ngModel)]="inspectedCharInput" (input)="inspectCharacter()" />
+      </div>
+
+      <div class="inspector-card" *ngIf="inspectResult.char">
+        <div class="char-hero">{{ inspectResult.char }}</div>
+        <ul class="char-specs">
+          <li><strong>Decimal (ASCII/Unicode):</strong> {{ inspectResult.ascii }}</li>
+          <li><strong>Hexadecimal:</strong> {{ inspectResult.hex }}</li>
+          <li><strong>Binary Byte:</strong> <code>{{ inspectResult.bin }}</code></li>
+          <li><strong>Is Printable ASCII:</strong> {{ inspectResult.isPrintable ? 'Yes' : 'No' }}</li>
+        </ul>
+      </div>
+
+      <button type="button" class="btn btn-outline" (click)="toggleAsciiTable()">
+        {{ showAsciiTable ? 'Hide ASCII Table' : '📑 Display Full ASCII Table (32-126)' }}
+      </button>
+
+      <div *ngIf="showAsciiTable" class="ascii-scroll-box">
+        <table class="data-table-mini">
+          <thead>
+            <tr>
+              <th>Dec</th>
+              <th>Hex</th>
+              <th>Glyph</th>
+              <th>Classification</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of asciiTableRows">
+              <td>{{ r.code }}</td>
+              <td><code>{{ r.hex }}</code></td>
+              <td class="glyph-cell">{{ r.char }}</td>
+              <td>{{ r.category }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <!-- MODULE 5: DICTIONARIES & ASSOCIATIVE MAPPING -->
+    <article class="module-card">
+      <div class="card-header">
+        <span class="module-num">JS 5</span>
+        <h2>Institutional Dictionary & Associative Lookup</h2>
+      </div>
+      <p class="card-desc">Direct O(1) hash map dictionary lookup for partner NGOs, regional institutes, and field offices.</p>
+
+      <div class="lookup-bar">
+        <input type="text" placeholder="Lookup Key (e.g. UNIPAZ, USIP)" [(ngModel)]="searchKeyInput" />
+        <button type="button" class="btn btn-primary" (click)="searchDictionary()">Search Key</button>
+      </div>
+
+      <p class="feedback-msg" *ngIf="dictSearchMessage">{{ dictSearchMessage }}</p>
+
+      <div *ngIf="queriedPartner" class="dictionary-card">
+        <h3>{{ queriedPartner.name }}</h3>
+        <p><strong>Code / Acronym:</strong> {{ queriedPartner.id }}</p>
+        <p><strong>Headquarters:</strong> {{ queriedPartner.country }}</p>
+        <p><strong>Focus Initiative:</strong> {{ queriedPartner.focusArea }}</p>
+        <p><strong>Official Liaison:</strong> {{ queriedPartner.contactEmail }}</p>
+        <p><strong>Active Cohorts:</strong> {{ queriedPartner.activeProjects }}</p>
+      </div>
+
+      <div class="dict-registered-keys">
+        <h4>Registered Dictionary Keys:</h4>
+        <div class="key-tags">
+          <span class="key-pill" *ngFor="let k of dictionaryKeys" (click)="searchKeyInput = k; searchDictionary()">
+            {{ k }}
+          </span>
+        </div>
+      </div>
+
+      <div class="add-dictionary-entry">
+        <h4>Register New Entity</h4>
+        <div class="mini-form">
+          <input type="text" placeholder="Key (Acronym)" [(ngModel)]="newKey" />
+          <input type="text" placeholder="Organization Name" [(ngModel)]="newName" />
+          <input type="text" placeholder="Country" [(ngModel)]="newCountry" />
+          <input type="text" placeholder="Focus Area" [(ngModel)]="newFocus" />
+          <button type="button" class="btn btn-secondary" (click)="insertDictionaryEntry()">Save Entry</button>
+        </div>
+      </div>
+    </article>
   </div>
-</div>
+</section>
