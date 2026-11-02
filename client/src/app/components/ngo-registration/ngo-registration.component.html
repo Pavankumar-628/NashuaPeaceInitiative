@@ -1,1 +1,254 @@
-<p>ngo-registration works!</p>
+<div class="ngo-portal-container">
+  <!-- Hero Section -->
+  <header class="portal-hero">
+    <div class="hero-content">
+      <span class="hero-badge">Regional & Global Alliance</span>
+      <h1 class="hero-title">NGO Partnership Registration</h1>
+      <p class="hero-subtitle">
+        Join the Nashua Peace Initiative coalition. Register your non-profit or civic advocacy group to access peacebuilding grants, cross-border youth training, and community mediation networks.
+      </p>
+    </div>
+  </header>
+
+  <!-- Step Wizard Breadcrumbs -->
+  <nav class="step-wizard-bar">
+    <div class="step-indicator" [class.active]="currentStep === 1" [class.completed]="currentStep > 1" (click)="goToStep(1)">
+      <div class="step-circle"><span *ngIf="currentStep <= 1">1</span><span *ngIf="currentStep > 1">&#10003;</span></div>
+      <div class="step-label">Organization Identity</div>
+    </div>
+    <div class="step-connector" [class.filled]="currentStep > 1"></div>
+    <div class="step-indicator" [class.active]="currentStep === 2" [class.completed]="currentStep > 2" (click)="goToStep(2)">
+      <div class="step-circle"><span *ngIf="currentStep <= 2">2</span><span *ngIf="currentStep > 2">&#10003;</span></div>
+      <div class="step-label">Representative Contact</div>
+    </div>
+    <div class="step-connector" [class.filled]="currentStep > 2"></div>
+    <div class="step-indicator" [class.active]="currentStep === 3" [class.completed]="currentStep > 3" (click)="goToStep(3)">
+      <div class="step-circle"><span *ngIf="currentStep <= 3">3</span><span *ngIf="currentStep > 3">&#10003;</span></div>
+      <div class="step-label">Mission & Focus</div>
+    </div>
+    <div class="step-connector" [class.filled]="currentStep > 3"></div>
+    <div class="step-indicator" [class.active]="currentStep === 4" [class.completed]="submitSuccess" (click)="goToStep(4)">
+      <div class="step-circle"><span *ngIf="!submitSuccess">4</span><span *ngIf="submitSuccess">&#10003;</span></div>
+      <div class="step-label">Verification & Review</div>
+    </div>
+  </nav>
+
+  <!-- Validation Error Notification Callout -->
+  <div class="alert-box alert-danger" *ngIf="validationErrors.length > 0">
+    <div class="alert-header"><strong>Please correct the following fields before proceeding:</strong></div>
+    <ul>
+      <li *ngFor="let err of validationErrors">{{ err }}</li>
+    </ul>
+  </div>
+
+  <!-- Success Confirmation Banner -->
+  <div class="alert-box alert-success" *ngIf="submitSuccess">
+    <div class="alert-icon">&#10004;</div>
+    <div class="alert-body">
+      <h3>{{ statusMessage }}</h3>
+      <p>Your documentation has been queued for institutional review by the Nashua Peace Advisory Board.</p>
+      <button class="btn btn-outline" (click)="resetForm()">Register Another Partner Organization</button>
+    </div>
+  </div>
+
+  <!-- Wizard Multi-Step Form Card -->
+  <div class="form-wizard-card" *ngIf="!submitSuccess">
+    <!-- STEP 1: ORGANIZATION IDENTITY -->
+    <section class="form-step-content" *ngIf="currentStep === 1">
+      <h2 class="step-heading">Step 1: Organization Identity & Legal Classification</h2>
+      <p class="step-desc">Provide primary statutory and geographic identification for your non-profit institution.</p>
+      <div class="form-grid">
+        <div class="form-group col-span-2">
+          <label>Full Legal Organization Name *</label>
+          <input type="text" [(ngModel)]="formData.orgName" placeholder="e.g., Granite State Youth Mediation Council" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Tax ID / Official Registration Number *</label>
+          <input type="text" [(ngModel)]="formData.regNumber" placeholder="e.g., EIN 12-3456789 or NGO-INT-554" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Organization Type</label>
+          <select [(ngModel)]="formData.orgType" class="form-control">
+            <option value="Non-Profit 501(c)(3)">Non-Profit 501(c)(3)</option>
+            <option value="Grassroots Coalition">Grassroots Coalition</option>
+            <option value="International Foundation">International Foundation</option>
+            <option value="Academic Peace Center">Academic Peace Center</option>
+            <option value="Civic Community Trust">Civic Community Trust</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Year Founded</label>
+          <input type="number" [(ngModel)]="formData.yearFounded" placeholder="e.g., 2012" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Official Website (URL)</label>
+          <input type="url" [(ngModel)]="formData.website" placeholder="https://yourpeaceorganization.org" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Country *</label>
+          <input type="text" [(ngModel)]="formData.country" placeholder="e.g., United States" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>City / Regional Municipality *</label>
+          <input type="text" [(ngModel)]="formData.city" placeholder="e.g., Nashua, NH" class="form-control" />
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: REPRESENTATIVE CONTACT -->
+    <section class="form-step-content" *ngIf="currentStep === 2">
+      <h2 class="step-heading">Step 2: Designated Representative & Contact Coordinates</h2>
+      <p class="step-desc">Identify the official liaison responsible for Nashua Peace Initiative communications.</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Primary Representative Full Name *</label>
+          <input type="text" [(ngModel)]="formData.contactName" placeholder="e.g., Dr. Marcus Vance" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Executive Title / Role *</label>
+          <input type="text" [(ngModel)]="formData.contactRole" placeholder="e.g., Director of Community Outreach" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Official Contact Email *</label>
+          <input type="email" [(ngModel)]="formData.contactEmail" placeholder="m.vance@granitestatepeace.org" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label>Direct Phone Number *</label>
+          <input type="tel" [(ngModel)]="formData.contactPhone" placeholder="+1 (603) 555-0198" class="form-control" />
+        </div>
+        <div class="form-group col-span-2">
+          <label>Headquarters Physical Address</label>
+          <input type="text" [(ngModel)]="formData.address" placeholder="100 Main Street, Suite 400, Nashua, NH 03060" class="form-control" />
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: MISSION & FOCUS AREAS -->
+    <section class="form-step-content" *ngIf="currentStep === 3">
+      <h2 class="step-heading">Step 3: Peacebuilding Mission & Thematic Focus Areas</h2>
+      <p class="step-desc">Select programmatic focus tags and state your organizational charter.</p>
+      <div class="form-group">
+        <label>Thematic Peace Focus Areas (Select All That Apply) *</label>
+        <div class="tag-selector-grid">
+          <button type="button" *ngFor="let tag of availableTags" class="tag-chip" [class.selected]="tag.selected" (click)="toggleTag(tag)">
+            <span class="tag-icon">{{ tag.selected ? '&#10003;' : '+' }}</span> {{ tag.label }}
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Institutional Mission Statement (Minimum 30 characters) *</label>
+        <textarea [(ngModel)]="formData.missionStatement" rows="4" class="form-control" placeholder="Describe how your organization advances conflict transformation, social equity, or peace education..."></textarea>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Operating Budget Bracket</label>
+          <select [(ngModel)]="formData.annualBudget" class="form-control">
+            <option value="Tier 1 (< $50k)">Tier 1 (&lt; $50k / Grassroots)</option>
+            <option value="Tier 2 ($50k - $250k)">Tier 2 ($50k - $250k / Regional)</option>
+            <option value="Tier 3 ($250k - $1M)">Tier 3 ($250k - $1M / Established)</option>
+            <option value="Tier 4 (> $1M)">Tier 4 (&gt; $1M / International)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Active Peace Corps Volunteers / Staff</label>
+          <input type="number" [(ngModel)]="formData.volunteerCount" placeholder="e.g., 25" class="form-control" />
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4: VERIFICATION & REVIEW -->
+    <section class="form-step-content" *ngIf="currentStep === 4">
+      <h2 class="step-heading">Step 4: Statutory Certification, Document Upload & Final Audit</h2>
+      <p class="step-desc">Verify your submission data and attach supporting registration credentials.</p>
+
+      <!-- Summary Review Box -->
+      <div class="summary-review-card">
+        <h3>Application Summary Preview</h3>
+        <div class="review-grid">
+          <div><strong>Organization:</strong> {{ formData.orgName || 'N/A' }}</div>
+          <div><strong>Entity Type:</strong> {{ formData.orgType }}</div>
+          <div><strong>Tax / Reg ID:</strong> {{ formData.regNumber || 'N/A' }}</div>
+          <div><strong>Location:</strong> {{ formData.city }}, {{ formData.country }}</div>
+          <div><strong>Primary Contact:</strong> {{ formData.contactName }} ({{ formData.contactEmail }})</div>
+          <div><strong>Selected Focus Areas:</strong> {{ formData.selectedFocusAreas.join(', ') || 'None selected' }}</div>
+        </div>
+      </div>
+
+      <!-- File Ingestor Simulation -->
+      <div class="upload-dropzone">
+        <div class="upload-icon">&#128196;</div>
+        <h4>Upload Official Non-Profit Determination or Charter</h4>
+        <p>Accepted formats: PDF, DOCX, PNG (Max file size: 5MB)</p>
+        <input type="file" (change)="onFileSelect($event)" class="file-input" />
+        <div class="file-status" *ngIf="formData.uploadedFileName">
+          <span class="file-badge">&#10003; {{ formData.uploadedFileName }} ({{ formData.uploadedFileSize }})</span>
+        </div>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="formData.verifiedAffidavit" />
+          <span>I solemnly certify that the information provided represents an authentic non-governmental entity committed to non-violence and peaceful civic dialogue. *</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Navigation Actions -->
+    <div class="wizard-actions">
+      <button class="btn btn-secondary" (click)="prevStep()" [disabled]="currentStep === 1">Back</button>
+      <button class="btn btn-primary" (click)="nextStep()" *ngIf="currentStep < totalSteps">Continue to Next Step &rarr;</button>
+      <button class="btn btn-success" (click)="submitRegistration()" *ngIf="currentStep === totalSteps">Submit Official Registration</button>
+    </div>
+  </div>
+
+  <!-- Live Registered NGO Directory Section -->
+  <section class="directory-section">
+    <div class="directory-header">
+      <div>
+        <h2 class="section-title">Verified NGO Registry Directory</h2>
+        <p class="section-subtitle">Real-time repository of affiliated civic partners active in the Nashua Peace Initiative network.</p>
+      </div>
+      <div class="directory-controls">
+        <input type="text" [(ngModel)]="searchQuery" (input)="applyFilter()" placeholder="Search by name, city, country, or focus..." class="search-input" />
+        <select [(ngModel)]="selectedFilterType" (change)="applyFilter()" class="filter-select">
+          <option value="ALL">All Entity Types</option>
+          <option value="Non-Profit">Non-Profit 501(c)(3)</option>
+          <option value="Grassroots">Grassroots</option>
+          <option value="International">International</option>
+          <option value="Academic">Academic</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Responsive Table -->
+    <div class="table-responsive">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>Partner ID</th>
+            <th>Organization Name</th>
+            <th>Location</th>
+            <th>Entity Type</th>
+            <th>Focus Areas</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ngo of filteredRegistrants">
+            <td><code class="id-tag">{{ ngo.id }}</code></td>
+            <td><strong>{{ ngo.orgName }}</strong><br><small class="text-muted">{{ ngo.contactEmail }}</small></td>
+            <td>{{ ngo.city }}, {{ ngo.country }}</td>
+            <td><span class="type-pill">{{ ngo.orgType }}</span></td>
+            <td>
+              <span class="mini-tag" *ngFor="let fa of ngo.focusAreas">{{ fa }}</span>
+            </td>
+            <td><span class="status-badge" [ngClass]="ngo.badgeColor">{{ ngo.status }}</span></td>
+          </tr>
+          <tr *ngIf="filteredRegistrants.length === 0">
+            <td colspan="6" class="text-center py-4">No registered partner organizations match your filter criteria.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
