@@ -21,8 +21,7 @@ const routes: Routes = [
   { path: 'projects', component: FirstProjectComponent },
   { path: 'partnerships', component: PartnershipsComponent },
   { path: 'organization', component: OrganizationComponent },
-  { path: 'documents', component: DocumentsComponent },
-  { path: 'ngo-registration', component: NgoRegistrationComponent },
+  { path: 'practice9', component: DocumentsComponent, title: 'Practice 9 | Nashua Peace Initiative' },  { path: 'ngo-registration', component: NgoRegistrationComponent },
   { path: 'get-involved', component: GetInvolvedComponent },
   { path: 'feedback', component: FeedbackComponent },
   { path: '**', redirectTo: '' }

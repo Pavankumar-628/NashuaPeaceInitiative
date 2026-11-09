@@ -1,11 +1,301 @@
-<div class="container">
-  <div class="card">
-    <h2>Organizational Documents</h2>
-    <ul style="padding-left: 1.25rem; line-height: 1.8;">
-      <li>Mission Statement (Draft)</li>
-      <li>Articles of Agreement (Simulated NH Form NP-1)</li>
-      <li>FUMN Academic Partnership Concept Note</li>
-      <li>Pilot Project Proposal & Resource Breakdown</li>
-    </ul>
-  </div>
+<div class="practice9-container">
+  <!-- Page Header -->
+  <header class="module-header">
+    <div class="header-badge">Weekly Practice 9 · COMP-699-B</div>
+    <h1 class="header-title">Technical Operations & Black Sea Geo-Explorer</h1>
+    <p class="header-subtitle">
+      Demonstrating client-side associative dictionary data models (<span class="code-pill">orderList</span>,
+      <span class="code-pill">bankList</span>, <span class="code-pill">employersList</span>) paired with an interactive
+      cartographic geographic explorer and regional conflict resolution quiz.
+    </p>
+  </header>
+
+  <!-- ===================================================== -->
+  <!-- SECTION 1: THREE DICTIONARY DATA ENGINES (bank, order, employer) -->
+  <!-- ===================================================== -->
+  <section class="card-section">
+    <div class="section-top">
+      <div>
+        <h2 class="section-title">Programmatic Dictionary Engines</h2>
+        <p class="section-desc">Fast key-value associative retrieval with amortized O(1) performance.</p>
+      </div>
+
+      <!-- Dictionary Tabs -->
+      <div class="tab-pill-group">
+        <button type="button" class="tab-pill" [class.active]="activeDictionary === 'banks'" (click)="setDictionaryMode('banks')">
+          Regional Banks (bankList)
+        </button>
+        <button type="button" class="tab-pill" [class.active]="activeDictionary === 'orders'" (click)="setDictionaryMode('orders')">
+          Procurement Orders (orderList)
+        </button>
+        <button type="button" class="tab-pill" [class.active]="activeDictionary === 'employers'" (click)="setDictionaryMode('employers')">
+          Civic Employers (employersList)
+        </button>
+      </div>
+    </div>
+
+    <!-- Search / Query Form -->
+    <div class="query-bar">
+      <div class="input-with-button">
+        <input type="text"
+               [(ngModel)]="dictSearchKey"
+               (keyup.enter)="searchDictionary()"
+               [placeholder]="'Enter key identifier (e.g., ' + (activeDictionary === 'banks' ? 'BofA, TD, Citizens' : activeDictionary === 'orders' ? 'ORD_901, ORD_902' : 'EMP_NPI, EMP_BAE') + ')...'"
+               class="custom-input" />
+        <button type="button" class="btn-primary" (click)="searchDictionary()">Look Up Key</button>
+      </div>
+
+      <!-- Available Keys Quick Selector -->
+      <div class="key-chips">
+        <span class="chips-label">Available Keys:</span>
+        <ng-container *ngIf="activeDictionary === 'banks'">
+          <span *ngFor="let k of bankKeys" class="clickable-chip" (click)="dictSearchKey = k; searchDictionary()">{{ k }}</span>
+        </ng-container>
+        <ng-container *ngIf="activeDictionary === 'orders'">
+          <span *ngFor="let k of orderKeys" class="clickable-chip" (click)="dictSearchKey = k; searchDictionary()">{{ k }}</span>
+        </ng-container>
+        <ng-container *ngIf="activeDictionary === 'employers'">
+          <span *ngFor="let k of employerKeys" class="clickable-chip" (click)="dictSearchKey = k; searchDictionary()">{{ k }}</span>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Query Feedback Callout -->
+    <div class="callout-banner" *ngIf="dictSearchMessage" [class.success]="activeBankResult || activeOrderResult || activeEmployerResult">
+      {{ dictSearchMessage }}
+    </div>
+
+    <!-- Display Active Record: Bank -->
+    <div class="record-detail-card" *ngIf="activeDictionary === 'banks' && activeBankResult">
+      <div class="detail-header">
+        <span class="badge-tag">Bank Code: {{ activeBankResult.bankId }}</span>
+        <h3>{{ activeBankResult.name }}</h3>
+      </div>
+      <div class="detail-grid">
+        <div class="metric-box">
+          <label>Routing Transit Number</label>
+          <div class="val font-mono">{{ activeBankResult.routing }}</div>
+        </div>
+        <div class="metric-box">
+          <label>SWIFT / BIC Identifier</label>
+          <div class="val font-mono">{{ activeBankResult.swift }}</div>
+        </div>
+        <div class="metric-box">
+          <label>Primary Regional Branch</label>
+          <div class="val">{{ activeBankResult.branchCity }}</div>
+        </div>
+        <div class="metric-box">
+          <label>Active Escrow & Operating Accounts</label>
+          <div class="val">{{ activeBankResult.activeAccounts | number }} Accounts</div>
+        </div>
+        <div class="metric-box full-span">
+          <label>Civic Peacebuilding Reserve Balance</label>
+          <div class="val text-success">${{ activeBankResult.reserveBalance | number:'1.2-2' }} USD</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Display Active Record: Order -->
+    <div class="record-detail-card" *ngIf="activeDictionary === 'orders' && activeOrderResult">
+      <div class="detail-header">
+        <span class="badge-tag">Order ID: {{ activeOrderResult.orderId }}</span>
+        <h3>{{ activeOrderResult.item }}</h3>
+      </div>
+      <div class="detail-grid">
+        <div class="metric-box">
+          <label>Consignee / Client</label>
+          <div class="val">{{ activeOrderResult.client }}</div>
+        </div>
+        <div class="metric-box">
+          <label>Dispatch Date</label>
+          <div class="val">{{ activeOrderResult.date }}</div>
+        </div>
+        <div class="metric-box">
+          <label>Quantity Dispatched</label>
+          <div class="val">{{ activeOrderResult.quantity }} Units</div>
+        </div>
+        <div class="metric-box">
+          <label>Unit Valuation</label>
+          <div class="val">${{ activeOrderResult.unitPrice | number:'1.2-2' }}</div>
+        </div>
+        <div class="metric-box full-span">
+          <label>Total Invoice & Status</label>
+          <div class="val text-primary">
+            ${{ (activeOrderResult.quantity * activeOrderResult.unitPrice) | number:'1.2-2' }} USD
+            <span class="status-pill">{{ activeOrderResult.status }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Display Active Record: Employer -->
+    <div class="record-detail-card" *ngIf="activeDictionary === 'employers' && activeEmployerResult">
+      <div class="detail-header">
+        <span class="badge-tag">Partner ID: {{ activeEmployerResult.empId }}</span>
+        <h3>{{ activeEmployerResult.companyName }}</h3>
+      </div>
+      <div class="detail-grid">
+        <div class="metric-box">
+          <label>Industry Classification</label>
+          <div class="val">{{ activeEmployerResult.industry }}</div>
+        </div>
+        <div class="metric-box">
+          <label>Regional Headquarters</label>
+          <div class="val">{{ activeEmployerResult.headquarters }}</div>
+        </div>
+        <div class="metric-box">
+          <label>Total Workforce</label>
+          <div class="val">{{ activeEmployerResult.workforce | number }} Employees</div>
+        </div>
+        <div class="metric-box">
+          <label>Partnership Tier</label>
+          <div class="val text-teal">{{ activeEmployerResult.partnershipTier }} Sponsor</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <!-- SECTION 2: BLACK SEA GEOGRAPHIC EXPLORER & SPLIT-VIEW MAP -->
+  <!-- ===================================================== -->
+  <section class="card-section">
+    <div class="section-top">
+      <div>
+        <h2 class="section-title">Black Sea Littoral Country Explorer</h2>
+        <p class="section-desc">Real-time geographic cartography with live interactive boundary coordinates.</p>
+      </div>
+      <div class="geo-search-box">
+        <input type="text"
+               [(ngModel)]="countrySearchQuery"
+               (input)="onSearchCountryInput()"
+               placeholder="Search country (e.g., Türkiye, Ukraine, Georgia)..."
+               class="custom-input search-sm" />
+      </div>
+    </div>
+
+    <!-- Dual-Column Responsive Grid: Explorer (Left) & Cartography Map (Right) -->
+    <div class="split-viewport-grid">
+      <!-- Left Column: Country Selector & Factual Metadata -->
+      <div class="info-column">
+        <label class="control-label">Select Littoral Coastal Nation:</label>
+        <select class="custom-select" [(ngModel)]="selectedCountryName" (change)="selectCountry(selectedCountryName)">
+          <option *ngFor="let c of countryList" [value]="c">{{ c }}</option>
+        </select>
+
+        <div class="coastal-facts-panel">
+          <div class="country-headline">
+            <h3>{{ selectedCountry.name }}</h3>
+            <span class="country-code-badge">{{ selectedCountry.code }}</span>
+          </div>
+
+          <ul class="facts-list">
+            <li><strong>Sovereign Capital:</strong> {{ selectedCountry.capital }}</li>
+            <li><strong>Coastline Length:</strong> {{ selectedCountry.coastalLengthKm | number }} km</li>
+            <li><strong>Strategic Port Hubs:</strong> {{ selectedCountry.strategicPort }}</li>
+            <li><strong>Geographic Coordinates:</strong> {{ selectedCountry.lat }}° N, {{ selectedCountry.lon }}° E</li>
+          </ul>
+
+          <div class="fact-note-card">
+            <strong>Regional Insight:</strong> {{ selectedCountry.fact }}
+          </div>
+
+          <div class="external-map-cta">
+            <a [href]="osmDirectLink" target="_blank" rel="noopener noreferrer" class="link-external">
+              Open Full-Screen OpenStreetMap &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive OpenStreetMap Frame -->
+      <div class="map-column">
+        <div class="map-wrapper">
+          <iframe [src]="safeMapUrl"
+                  class="embedded-map"
+                  title="Interactive OpenStreetMap Black Sea Country Locator"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                  allowfullscreen>
+          </iframe>
+          <div class="map-attribution">
+            Cartographic data © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <!-- SECTION 3: INTERACTIVE BLACK SEA PEACE & GEOGRAPHY QUIZ -->
+  <!-- ===================================================== -->
+  <section class="card-section">
+    <div class="quiz-container">
+      <div class="quiz-header">
+        <div>
+          <h2 class="section-title">Black Sea Regional Knowledge Assessment</h2>
+          <p class="section-desc">Test your understanding of maritime sovereignty, capital locations, and strategic ports.</p>
+        </div>
+        <div class="quiz-score-badge">
+          Score: {{ quizScore }} / {{ quizQuestions.length }}
+        </div>
+      </div>
+
+      <!-- Active Question Mode -->
+      <div *ngIf="!quizCompleted" class="question-frame">
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" [style.width.%]="((currentQuestionIndex + 1) / quizQuestions.length) * 100"></div>
+        </div>
+
+        <h3 class="question-text">
+          <span class="q-number">Question {{ currentQuestionIndex + 1 }} of {{ quizQuestions.length }}:</span>
+          {{ quizQuestions[currentQuestionIndex].text }}
+        </h3>
+
+        <!-- Answer Options -->
+        <div class="choices-stack">
+          <button type="button"
+                  *ngFor="let opt of quizQuestions[currentQuestionIndex].options"
+                  class="choice-btn"
+                  [class.selected]="selectedOption === opt"
+                  [class.correct]="isAnswerSubmitted && opt === quizQuestions[currentQuestionIndex].answer"
+                  [class.incorrect]="isAnswerSubmitted && selectedOption === opt && opt !== quizQuestions[currentQuestionIndex].answer"
+                  [disabled]="isAnswerSubmitted"
+                  (click)="handleAnswerSelect(opt)">
+            <span class="choice-indicator">{{ selectedOption === opt ? '●' : '○' }}</span>
+            <span class="choice-text">{{ opt }}</span>
+          </button>
+        </div>
+
+        <!-- Real-Time Feedback -->
+        <div class="quiz-feedback-box" *ngIf="feedbackMessage" [class.correct-feedback]="selectedOption === quizQuestions[currentQuestionIndex].answer">
+          {{ feedbackMessage }}
+        </div>
+
+        <!-- Controller Actions -->
+        <div class="quiz-action-bar">
+          <button type="button"
+                  class="btn-primary"
+                  [disabled]="!isAnswerSubmitted"
+                  (click)="nextQuestion()">
+            {{ currentQuestionIndex === quizQuestions.length - 1 ? 'Finish Assessment' : 'Next Question &rarr;' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Quiz Completed Score Screen -->
+      <div *ngIf="quizCompleted" class="completion-banner">
+        <div class="trophy-icon">🏆</div>
+        <h3>Assessment Complete!</h3>
+        <p class="final-score-text">
+          You achieved a score of <strong>{{ quizScore }}</strong> out of <strong>{{ quizQuestions.length }}</strong>
+          ({{ (quizScore / quizQuestions.length) * 100 | number:'1.0-0' }}%).
+        </p>
+        <p class="final-note">
+          Understanding the geopolitical dynamics and littoral geography of the Black Sea directly supports our
+          Nashua Peace Initiative cross-cultural education modules.
+        </p>
+        <button type="button" class="btn-primary" (click)="restartQuiz()">Retake Assessment</button>
+      </div>
+    </div>
+  </section>
 </div>

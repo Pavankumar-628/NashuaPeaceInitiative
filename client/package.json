@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "build:all": "ng build --configuration production --base-href /NashuaPeaceInitiative/ --output-path ../docs && ng build --configuration production --base-href ./ --output-path dist"
   },
   "private": true,
   "dependencies": {
